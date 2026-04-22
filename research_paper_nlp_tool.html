@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Scholar</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1714;
+    --ink-2: #4a453f;
+    --ink-3: #8a837a;
+    --paper: #faf8f4;
+    --paper-2: #f2ede5;
+    --paper-3: #e8e0d4;
+    --accent: #8b5e3c;
+    --accent-light: #c9956a;
+    --accent-pale: #f5ede3;
+    --success: #3a6b4a;
+    --success-pale: #e8f2eb;
+    --border: rgba(26,23,20,0.12);
+    --radius: 10px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    padding: 4px 14px 5px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+  }
+
+  .subtitle {
+    color: var(--ink-3);
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 0.5rem;
+  }
+
+  .field-hint {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 0.35rem;
+    font-style: italic;
+  }
+
+  textarea, input[type=text] {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 0.65rem 0.85rem;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  textarea:focus, input[type=text]:focus {
+    border-color: var(--accent-light);
+  }
+
+  textarea { min-height: 90px; }
+
+  .mode-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin: 1.25rem 0 1.5rem;
+  }
+
+  .mode-btn {
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.85rem 1rem;
+    background: #fff;
+    text-align: left;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .mode-btn:hover { border-color: var(--accent-light); }
+
+  .mode-btn.active {
+    border-color: var(--accent);
+    background: var(--accent-pale);
+  }
+
+  .mode-btn .mode-icon {
+    font-size: 18px;
+    margin-bottom: 0.3rem;
+    display: block;
+  }
+
+  .mode-btn .mode-title {
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--ink);
+    display: block;
+  }
+
+  .mode-btn .mode-desc {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 2px;
+    display: block;
+    line-height: 1.4;
+  }
+
+  .mode-btn .check {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    background: #fff;
+    transition: all 0.15s;
+  }
+
+  .mode-btn.active .check {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .mode-btn.active .check::after {
+    content: '';
+    width: 5px; height: 5px;
+    background: #fff;
+    border-radius: 50%;
+  }
+
+  .run-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 14px;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.85rem;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.15s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .run-btn:hover { background: #7a4f2e; }
+  .run-btn:active { transform: scale(0.99); }
+  .run-btn:disabled { background: var(--ink-3); cursor: not-allowed; }
+
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .result-card {
+    background: var(--success-pale);
+    border: 1px solid rgba(58,107,74,0.2);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-top: 1.25rem;
+    display: none;
+  }
+
+  .result-card.visible { display: block; }
+
+  .result-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .result-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--success);
+    flex-shrink: 0;
+  }
+
+  .result-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--success);
+  }
+
+  .result-text {
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: var(--ink);
+    white-space: pre-wrap;
+  }
+
+  .copy-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 1rem;
+  }
+
+  .copy-btn {
+    background: none;
+    border: 1px solid rgba(58,107,74,0.3);
+    border-radius: 6px;
+    padding: 0.4rem 0.9rem;
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--success);
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+
+  .copy-btn:hover { background: rgba(58,107,74,0.08); }
+
+  .error-card {
+    background: #fff4f3;
+    border: 1px solid rgba(180,50,40,0.2);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    color: #9b3028;
+    font-size: 13px;
+    margin-top: 1rem;
+    display: none;
+  }
+
+  .error-card.visible { display: block; }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1.5rem 0;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--ink-2);
+    margin-bottom: 1rem;
+  }
+
+  .example-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 0.5rem;
+  }
+
+  .chip {
+    background: var(--paper-2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 11px;
+    font-size: 11.5px;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s;
+  }
+
+  .chip:hover { background: var(--paper-3); border-color: var(--accent-light); }
+
+  .streaming-cursor {
+    display: inline-block;
+    width: 2px; height: 14px;
+    background: var(--success);
+    vertical-align: text-bottom;
+    margin-left: 1px;
+    animation: blink 0.8s step-end infinite;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo-badge">&#9998; Scholar</div>
+    <h1>Research Writing Assistant</h1>
+    <h3>शोध लिखावट फटाफट</h3>
+    <p class="subtitle">Turn your understanding into properly cited academic prose</p>
+  </header>
+
+  <div class="card">
+    <p class="section-title">Your understanding</p>
+    <label class="field-label" for="understanding">What you understood / want to include from the paper</label>
+    <textarea id="understanding" placeholder="e.g. The study found that transformer models significantly outperform RNNs on long-range dependency tasks when given sufficient training data…"></textarea>
+    <p class="field-hint">Write in your own words — no need for perfect grammar. The AI will polish it.</p>
+
+    <div style="margin-top: 0.5rem;">
+      <div class="example-chips" id="example-chips">
+        <span class="chip" data-example="The paper argues that attention mechanisms are better than recurrent connections at capturing long-range dependencies in text." data-cite="Vaswani et al. (2017). Attention is all you need. NeurIPS, 30.">Try: Attention mechanisms</span>
+        <span class="chip" data-example="They showed that fine-tuning a pre-trained language model on a small labeled dataset achieves state-of-the-art results." data-cite="Howard & Ruder (2018). Universal language model fine-tuning for text classification. ACL, 328–339.">Try: Fine-tuning LLMs</span>
+        <span class="chip" data-example="The research demonstrates a strong correlation between social media usage and increased anxiety levels in adolescents." data-cite="Twenge et al. (2018). Increases in depressive symptoms among U.S. adolescents. Clinical Psychological Science, 6(1), 3–17.">Try: Social media & anxiety</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <label class="field-label" for="citation">Paper citation</label>
+    <input type="text" id="citation" placeholder="e.g. Smith, J., & Lee, K. (2023). Title of paper. Journal Name, 45(2), 112–130." />
+    <p class="field-hint">Use APA, MLA, Chicago, or any standard format — the AI will work with it.</p>
+    <div style="margin-top: 0.9rem;">
+      <label class="field-label" for="gemini-api-key">Gemini API key</label>
+      <input type="password" id="gemini-api-key" placeholder="Paste your Gemini API key (AIza...)" />
+      <p class="field-hint">Saved locally in this browser so you only need to enter it once on this device.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="section-title">What would you like?</p>
+    <div class="mode-row">
+      <button class="mode-btn active" data-mode="paraphrase" onclick="selectMode('paraphrase', this)">
+        <span class="check"></span>
+        <span class="mode-icon">&#9997;</span>
+        <span class="mode-title">Paraphrase & cite</span>
+        <span class="mode-desc">Rewrite the idea in your own academic voice, with proper in-text citation</span>
+      </button>
+      <button class="mode-btn" data-mode="quote" onclick="selectMode('quote', this)">
+        <span class="check"></span>
+        <span class="mode-icon">&#10077;</span>
+        <span class="mode-title">Direct quote</span>
+        <span class="mode-desc">Extract the exact sentence with quotation marks and correct citation format</span>
+      </button>
+    </div>
+
+    <button class="run-btn" id="run-btn" onclick="generate()">
+      <span id="btn-label">Generate</span>
+    </button>
+  </div>
+
+  <div class="result-card" id="result-card">
+    <div class="result-header">
+      <div class="result-dot"></div>
+      <span class="result-label" id="result-label">Paraphrased</span>
+    </div>
+    <div class="result-text" id="result-text"></div>
+    <div class="copy-row">
+      <button class="copy-btn" onclick="copyResult()">Copy text</button>
+    </div>
+  </div>
+
+  <div class="error-card" id="error-card"></div>
+</div>
+
+<script>
+let selectedMode = 'paraphrase';
+const GEMINI_KEY_STORAGE_KEY = 'research_tool_gemini_api_key';
+
+const geminiApiKeyInput = document.getElementById('gemini-api-key');
+const savedApiKey = localStorage.getItem(GEMINI_KEY_STORAGE_KEY);
+if (savedApiKey) {
+  geminiApiKeyInput.value = savedApiKey;
+}
+
+geminiApiKeyInput.addEventListener('input', () => {
+  const currentValue = geminiApiKeyInput.value.trim();
+  if (currentValue) {
+    localStorage.setItem(GEMINI_KEY_STORAGE_KEY, currentValue);
+  } else {
+    localStorage.removeItem(GEMINI_KEY_STORAGE_KEY);
+  }
+});
+
+geminiApiKeyInput.addEventListener('focus', () => {
+  geminiApiKeyInput.type = 'text';
+});
+
+geminiApiKeyInput.addEventListener('blur', () => {
+  geminiApiKeyInput.type = 'password';
+});
+
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.getElementById('understanding').value = chip.dataset.example;
+    document.getElementById('citation').value = chip.dataset.cite;
+  });
+});
+
+function selectMode(mode, el) {
+  selectedMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-card');
+  el.textContent = msg;
+  el.classList.add('visible');
+}
+
+function hideError() {
+  document.getElementById('error-card').classList.remove('visible');
+}
+
+async function generate() {
+  const understanding = document.getElementById('understanding').value.trim();
+  const citation = document.getElementById('citation').value.trim();
+  const geminiApiKey = document.getElementById('gemini-api-key').value.trim();
+  hideError();
+
+  if (!understanding) { showError('Please describe what you understood from the paper.'); return; }
+  if (!citation) { showError('Please enter the paper citation.'); return; }
+  if (!geminiApiKey) { showError('Please enter your Gemini API key.'); return; }
+  localStorage.setItem(GEMINI_KEY_STORAGE_KEY, geminiApiKey);
+
+  const btn = document.getElementById('run-btn');
+  const btnLabel = document.getElementById('btn-label');
+  const resultCard = document.getElementById('result-card');
+  const resultText = document.getElementById('result-text');
+  const resultLabel = document.getElementById('result-label');
+
+  btn.disabled = true;
+  btnLabel.innerHTML = '<div class="spinner"></div> Generating…';
+  resultCard.classList.remove('visible');
+  resultText.textContent = '';
+
+  const modeInstructions = selectedMode === 'paraphrase'
+    ? `The user wants to PARAPHRASE this idea in proper academic prose. 
+       - Rewrite it in clear, formal academic English
+       - Use third-person where appropriate
+       - Add a correct in-text citation from the citation provided (e.g., APA: Author, Year, or MLA style)`
+    : `The user wants to use a DIRECT QUOTE from this paper.
+       - Construct a properly formatted direct quotation using the idea the user described
+       - Wrap the quoted portion in double quotation marks
+       - Add the correct in-text citation with page number placeholder if not given (e.g., p. XX)
+       - Show how to introduce the quote with a signal phrase (e.g., "According to Smith (2023)...")`;
+
+  const prompt = `You are an expert academic writing assistant specializing in research papers and citations.
+
+User's understanding of the paper:
+"${understanding}"
+
+Paper citation:
+"${citation}"
+
+Task:
+${modeInstructions}
+
+Format your response as clean, readable academic text. Do NOT use markdown headers or bullet points — write in flowing prose paragraphs. Keep it concise and practical. Do not leave any sentence incomplete.`;
+
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(geminiApiKey)}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [{ text: prompt }]
+          }
+        ],
+        generationConfig: {
+          maxOutputTokens: 1000
+        }
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error?.message || 'Gemini API error');
+    }
+
+    resultLabel.textContent = selectedMode === 'paraphrase' ? 'Paraphrased & cited' : 'Direct quote';
+    resultCard.classList.add('visible');
+    const data = await response.json();
+    const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('')?.trim();
+    if (!text) throw new Error('Gemini returned an empty response.');
+    resultText.innerHTML = text.replace(/\n/g, '<br>');
+
+  } catch (err) {
+    showError('Something went wrong: ' + err.message);
+    resultCard.classList.remove('visible');
+  } finally {
+    btn.disabled = false;
+    btnLabel.textContent = 'Generate';
+  }
+}
+
+function copyResult() {
+  const text = document.getElementById('result-text').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy text', 1800);
+  });
+}
+</script>
+</body>
+</html>
